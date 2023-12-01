@@ -26,5 +26,5 @@ if __name__ == '__main__':
      asyncio.run(main())
 
 @dp.message(Command('stop'))
-async def stops():
+async def stops(message):
     await dp.stop_polling()
