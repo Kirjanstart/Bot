@@ -5,17 +5,17 @@ from aiogram.filters.command import Command
 
 
 logging.basicConfig(level=logging.INFO)
-API_TOKEN = ''
+API_TOKEN = '6861695078:AAEsMfeI4mbt_HreAEUmsVcAYV83ZrGdttM'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
 
 @dp.message(Command('start'))
 async def send_welcome(message: types.Message):
-    await message.reply(f'Привет!\nЯ Botty!\nОтправь мне любое сообщение и я на него отвечу!')
+    await message.answer(f'Привет!\nЯ Botty!\nОтправь мне любое своё имя!')
 
 @dp.message()
 async def echo(message: types.Message):
-    await message.answer(message.text)
+    await message.reply(f'Привет {message.text}, ты супер!')
 
 
 
