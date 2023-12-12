@@ -19,12 +19,18 @@ async def echo(message: types.Message):
 
 
 
+@dp.message(Command('stop'))
+async def button_view(message: types.Message):
+    kb = [[types.KeyboardButton(text='Кнопка 1'), types.KeyboardButton(text='Кнопка 2')], ]
+    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
+    await message.reply(f'Вот тебе две кнопки, развлекайся!', reply_markup=keyboard)
+
+
+
+
+
 async def main():
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
      asyncio.run(main())
-
-@dp.message(Command('stop'))
-async def stops(message):
-    await dp.stop_polling()
