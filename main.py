@@ -4,14 +4,14 @@ from core.handlers.basic import get_start, get_photo
 from aiogram import Bot, Dispatcher, F
 from core.settings import settings
 
-
-
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
 dp = Dispatcher()
 
+
 async def start_bot():
     await bot.send_message(settings.bots.admin_id, text='Бот запущен!')
+
 
 async def stop_bot():
     await bot.send_message(settings.bots.admin_id, text='Бот остановлен!')
@@ -30,4 +30,4 @@ async def main():
 
 
 if __name__ == '__main__':
-     asyncio.run(main())
+    asyncio.run(main())
