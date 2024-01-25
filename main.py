@@ -1,36 +1,33 @@
 import asyncio
 import logging
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters.command import Command
+from core.handlers.basic import get_start, get_photo
+from aiogram import Bot, Dispatcher, F
+from core.settings import settings
+
 
 
 logging.basicConfig(level=logging.INFO)
-API_TOKEN = '6861695078:AAEsMfeI4mbt_HreAEUmsVcAYV83ZrGdttM'
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
 dp = Dispatcher()
 
-@dp.message(Command('start'))
-async def send_welcome(message: types.Message):
-    await message.answer(f'Привет!\nЯ Botty!\nОтправь мне любое своё имя!')
+async def start_bot():
+    await bot.send_message(settings.bots.admin_id, text='Бот запущен!')
 
-@dp.message()
-async def echo(message: types.Message):
-    await message.reply(f'Привет {message.text}, ты супер!')
-
-
-
-@dp.message(Command('stop'))
-async def button_view(message: types.Message):
-    kb = [[types.KeyboardButton(text='Кнопка 1'), types.KeyboardButton(text='Кнопка 2')], ]
-    keyboard = types.ReplyKeyboardMarkup(keyboard=kb)
-    await message.reply(f'Вот тебе две кнопки, развлекайся!', reply_markup=keyboard)
-
-
-
+async def stop_bot():
+    await bot.send_message(settings.bots.admin_id, text='Бот остановлен!')
 
 
 async def main():
-    await dp.start_polling(bot)
+    dp.message.register(get_start, )
+    dp.startup.register(start_bot, )
+    dp.shutdown.register(stop_bot)
+    dp.message.register(get_photo, F.photo)
+
+    try:
+        await dp.start_polling(bot)
+    finally:
+        await bot.session.close()
+
 
 if __name__ == '__main__':
      asyncio.run(main())
