@@ -9,18 +9,19 @@ bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
 dp = Dispatcher()
 
 
+@dp.startup()
 async def start_bot():
     await bot.send_message(settings.bots.admin_id, text='Бот запущен!')
 
-
+@dp.shutdown()
 async def stop_bot():
     await bot.send_message(settings.bots.admin_id, text='Бот остановлен!')
 
 
 async def main():
-    dp.message.register(get_start, )
-    dp.startup.register(start_bot, )
-    dp.shutdown.register(stop_bot)
+    # dp.startup.register(start_bot)
+    # dp.shutdown.register(stop_bot)
+    dp.message.register(get_start)
     dp.message.register(get_photo, F.photo)
 
     try:
