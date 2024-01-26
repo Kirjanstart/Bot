@@ -19,8 +19,8 @@ def get_settings(path: str):
 
     return Settings(
         bots=Bots(
-            bot_token=env.str("TOKEN"),
-            admin_id=env.int("ADMIN_ID")
+            bot_token=env.str('TOKEN'),
+            admin_id=env.int('ADMIN_ID')
         )
     )
 

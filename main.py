@@ -6,6 +6,7 @@ from core.handlers.basic import get_start, get_photo, get_hello
 from core.handlers.contact import get_fake_contact, get_true_contact
 from core.settings import settings
 from core.filters.iscontact import IsTrueContact
+from core.utils.commands import set_commands
 
 
 logging.basicConfig(level=logging.INFO)
@@ -15,7 +16,9 @@ dp = Dispatcher()
 
 @dp.startup()
 async def start_bot():
+    # await set_commands(bot)
     await bot.send_message(settings.bots.admin_id, text='Бот запущен!')
+
 
 @dp.shutdown()
 async def stop_bot():
