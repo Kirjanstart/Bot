@@ -1,8 +1,12 @@
 import asyncio
 import logging
-from core.handlers.basic import get_start, get_photo
 from aiogram import Bot, Dispatcher, F
+from aiogram.filters import Command
+from core.handlers.basic import get_start, get_photo, get_hello
+from core.handlers.contact import get_fake_contact, get_true_contact
 from core.settings import settings
+from core.filters.iscontact import IsTrueContact
+
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
@@ -21,8 +25,13 @@ async def stop_bot():
 async def main():
     # dp.startup.register(start_bot)
     # dp.shutdown.register(stop_bot)
-    dp.message.register(get_start)
+    dp.message.register(get_start, Command('start'))
     dp.message.register(get_photo, F.photo)
+    dp.message.register(get_hello, F.text == 'Привет')
+    dp.message.register(get_true_contact, F.contact, IsTrueContact())
+    dp.message.register(get_fake_contact, F.contact)
+    dp.message.register(get_fake_contact, IsTrueContact)
+
 
     try:
         await dp.start_polling(bot)
