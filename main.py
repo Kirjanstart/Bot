@@ -2,11 +2,14 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
-from core.handlers.basic import get_start, get_photo, get_hello, get_location
+from core.handlers.basic import get_start, get_photo, get_hello, get_location, get_inline
 from core.handlers.contact import get_fake_contact, get_true_contact
 from core.settings import settings
 from core.filters.iscontact import IsTrueContact
 from core.utils.commands import set_commands
+from core.handlers.callback import select_macbook
+from core.utils.callbackdata import MacInfo
+
 
 
 logging.basicConfig(level=logging.INFO)
@@ -16,7 +19,7 @@ dp = Dispatcher()
 
 @dp.startup()
 async def start_bot():
-    # await set_commands(bot)
+    await set_commands(bot)
     await bot.send_message(settings.bots.admin_id, text='Бот запущен!')
 
 
@@ -28,6 +31,8 @@ async def stop_bot():
 async def main():
     # dp.startup.register(start_bot)
     # dp.shutdown.register(stop_bot)
+    dp.message.register(get_inline, Command(commands='inline'))
+    dp.callback_query.register(select_macbook, MacInfo.filter(F.model == 'pro'))
     dp.message.register(get_start, Command('start'))
     dp.message.register(get_photo, F.photo)
     dp.message.register(get_location, F.location)
@@ -40,7 +45,6 @@ async def main():
         await dp.start_polling(bot)
     finally:
         await bot.session.close()
-
 
 if __name__ == '__main__':
     asyncio.run(main())
