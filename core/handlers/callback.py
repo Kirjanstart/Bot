@@ -2,6 +2,7 @@ from aiogram import Bot
 from aiogram.types import CallbackQuery
 from core.utils.callbackdata import MacInfo
 
+
 # async def select_macbook(call: CallbackQuery, bot: Bot):
 #     model = call.data.split('_')[1]
 #     size = call.data.split('_')[2]

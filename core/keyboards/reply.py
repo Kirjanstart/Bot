@@ -67,7 +67,8 @@ ltp_kb = [
 
 ]
 loc_tel_poll_keyboard = ReplyKeyboardMarkup(keyboard=ltp_kb, resize_keyboard=True, one_time_keyboard=False,
-                                            input_field_placeholder='Отправь локацию, номер телефона или создай викторину/опрос')
+                                            input_field_placeholder='Отправь локацию, номер телефона или создай'
+                                                                    ' викторину/опрос')
 
 
 def get_reply_keyboard():
@@ -82,5 +83,3 @@ def get_reply_keyboard():
     keyboard_builder.adjust(3, 2, 1)
     return keyboard_builder.as_markup(resize_keyboard=True, one_time_keyboard=True,
                                input_field_placeholder='Отправь локацию, номер телефона или создай викторину/опрос')
-
-

@@ -2,6 +2,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from core.utils.callbackdata import MacInfo
 
+
 select_macbook = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(
