@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import asyncpg
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 from core.handlers.basic import get_start, get_photo, get_hello, get_location, get_inline
@@ -10,7 +11,9 @@ from core.utils.commands import set_commands
 from core.handlers.callback import select_macbook
 from core.utils.callbackdata import MacInfo
 from core.handlers.pay import order, pre_checkout_query, successful_payment, shipping_check
-
+from core.middlewares.countermiddleware import CounterMiddleware
+from core.middlewares.officehours import OfficeHoursMiddleware
+from core.middlewares.dbmiddleware import DbSession
 
 
 logging.basicConfig(level=logging.INFO)
@@ -29,9 +32,21 @@ async def stop_bot():
     await bot.send_message(settings.bots.admin_id, text='Бот остановлен!')
 
 
+async  def crete_pool():
+    return await asyncpg.create_pool(user='postgres', password='3846', database='users',
+                                            host= '127.0.0.1', port=5432, command_timeout=60)
+
+
 async def main():
     # dp.startup.register(start_bot)
     # dp.shutdown.register(stop_bot)
+    pool_connect = await crete_pool()
+    # pool_connect = await asyncpg.create_pool(user='postgres', password='3846', database='users',
+    #                                         host= '127.0.0.1', port=5432, command_timeout=60)
+    dp.update.middleware.register(DbSession(pool_connect))
+    dp.message.middleware.register(CounterMiddleware())
+    # dp.message.middleware.register(OfficeHoursMiddleware())
+    dp.update.middleware.register(OfficeHoursMiddleware())
     dp.message.register(order, Command(commands='pay'))
     dp.pre_checkout_query.register(pre_checkout_query)
     dp.message.register(successful_payment, F.successful_payment)

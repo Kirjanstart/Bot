@@ -87,7 +87,6 @@ async def shipping_check(shipping_query: ShippingQuery, bot: Bot):
     await bot.answer_shipping_query(shipping_query.id, ok=True, shipping_options=shipping_options)
 
 
-
 async def order(message: Message, bot: Bot):
     await bot.send_invoice(
         chat_id=message.chat.id,
