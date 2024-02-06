@@ -9,7 +9,7 @@ from core.filters.iscontact import IsTrueContact
 from core.utils.commands import set_commands
 from core.handlers.callback import select_macbook
 from core.utils.callbackdata import MacInfo
-from core.handlers.pay import order, pre_checkout_query, successful_payment
+from core.handlers.pay import order, pre_checkout_query, successful_payment, shipping_check
 
 
 
@@ -35,6 +35,7 @@ async def main():
     dp.message.register(order, Command(commands='pay'))
     dp.pre_checkout_query.register(pre_checkout_query)
     dp.message.register(successful_payment, F.successful_payment)
+    dp.shipping_query.register(shipping_check)
     dp.message.register(get_inline, Command(commands='inline'))
     dp.callback_query.register(select_macbook, MacInfo.filter(F.model == 'pro'))
     dp.message.register(get_start, Command('start'))
