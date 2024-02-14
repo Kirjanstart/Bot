@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import logging
 import asyncpg
 from aiogram import Bot, Dispatcher, F
@@ -13,9 +14,13 @@ from core.utils.callbackdata import MacInfo
 from core.handlers.pay import order, pre_checkout_query, successful_payment, shipping_check
 from core.middlewares.countermiddleware import CounterMiddleware
 from core.middlewares.officehours import OfficeHoursMiddleware
+from core.middlewares.apschedulermiddleware import SchedulerMiddleware
 from core.middlewares.dbmiddleware import DbSession
 from core.handlers import form
 from core.utils.statesform import StepsForm
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from core.handlers import apsched
+from datetime import datetime, timedelta
 
 
 logging.basicConfig(level=logging.INFO)
@@ -45,10 +50,18 @@ async def main():
     pool_connect = await crete_pool()
     # pool_connect = await asyncpg.create_pool(user='postgres', password='3846', database='users',
     #                                         host= '127.0.0.1', port=5432, command_timeout=60)
+    scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
+    scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10),
+                      kwargs={'bot': bot})
+    scheduler.add_job(apsched.send_message_cron, trigger='cron', hour=datetime.now().hour,
+                      minute=datetime.now().minute + 1, start_date=datetime.now(), kwargs={'bot': bot})
+    scheduler.add_job(apsched.send_message_interval, trigger='interval', seconds=60, kwargs={'bot': bot})
+    scheduler.start()
     dp.update.middleware.register(DbSession(pool_connect))
     dp.message.middleware.register(CounterMiddleware())
     # dp.message.middleware.register(OfficeHoursMiddleware())
     dp.update.middleware.register(OfficeHoursMiddleware())
+    dp.update.middleware.register(SchedulerMiddleware(scheduler))
     dp.message.register(form.get_form, Command(commands='form'))
     dp.message.register(form.get_name, StepsForm.GET_NAME)
     dp.message.register(form.get_last_name, StepsForm.GET_LAST_NAME)
