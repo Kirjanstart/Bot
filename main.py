@@ -14,6 +14,8 @@ from core.handlers.pay import order, pre_checkout_query, successful_payment, shi
 from core.middlewares.countermiddleware import CounterMiddleware
 from core.middlewares.officehours import OfficeHoursMiddleware
 from core.middlewares.dbmiddleware import DbSession
+from core.handlers import form
+from core.utils.statesform import StepsForm
 
 
 logging.basicConfig(level=logging.INFO)
@@ -47,6 +49,10 @@ async def main():
     dp.message.middleware.register(CounterMiddleware())
     # dp.message.middleware.register(OfficeHoursMiddleware())
     dp.update.middleware.register(OfficeHoursMiddleware())
+    dp.message.register(form.get_form, Command(commands='form'))
+    dp.message.register(form.get_name, StepsForm.GET_NAME)
+    dp.message.register(form.get_last_name, StepsForm.GET_LAST_NAME)
+    dp.message.register(form.get_age, StepsForm.GET_AGE)
     dp.message.register(order, Command(commands='pay'))
     dp.pre_checkout_query.register(pre_checkout_query)
     dp.message.register(successful_payment, F.successful_payment)

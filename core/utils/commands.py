@@ -23,6 +23,10 @@ async def set_commands(bot: Bot):
         BotCommand(
             command='pay',
             description='Оплатить'
+        ),
+        BotCommand(
+            command='form',
+            description='Начать опрос'
         )
     ]
     await bot.set_my_commands(commands, BotCommandScopeDefault())
