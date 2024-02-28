@@ -22,6 +22,10 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from core.handlers import apsched
 from datetime import datetime, timedelta
 from core.handlers import send_media
+from core.middlewares.example_chat_action_middleware import ExampleChatActionMiddleware
+
+
+
 
 
 logging.basicConfig(level=logging.INFO)
@@ -64,15 +68,16 @@ async def main():
     # dp.message.middleware.register(OfficeHoursMiddleware())
     # dp.update.middleware.register(OfficeHoursMiddleware())
     # dp.update.middleware.register(SchedulerMiddleware(scheduler))
+    dp.message.middleware.register(ExampleChatActionMiddleware(bot))
 
-    dp.message.register(send_media.get_audio, Command(commands='audio'))
-    dp.message.register(send_media.get_document, Command(commands='document'))
-    dp.message.register(send_media.get_media_group, Command(commands='mediagroup'))
-    dp.message.register(send_media.get_photo, Command(commands='photo'))
-    dp.message.register(send_media.get_sticker, Command(commands='sticker'))
-    dp.message.register(send_media.get_video, Command(commands='video'))
-    dp.message.register(send_media.get_video_note, Command(commands='video_note'))
-    dp.message.register(send_media.get_voice, Command(commands='voice'))
+    dp.message.register(send_media.get_audio, Command(commands='audio'), flags={'chat_action': 'upload_document'})
+    dp.message.register(send_media.get_document, Command(commands='document'), flags={'chat_action': 'upload_document'})
+    dp.message.register(send_media.get_media_group, Command(commands='mediagroup'), flags={'chat_action': 'upload_photo'})
+    dp.message.register(send_media.get_photo, Command(commands='photo'), flags={'chat_action': 'upload_photo'})
+    dp.message.register(send_media.get_sticker, Command(commands='sticker'), flags={'chat_action': 'choose_sticker'})
+    dp.message.register(send_media.get_video, Command(commands='video'), flags={'chat_action': 'upload_video'})
+    dp.message.register(send_media.get_video_note, Command(commands='video_note'), flags={'chat_action': 'upload_video_note'})
+    dp.message.register(send_media.get_voice, Command(commands='voice'), flags={'chat_action': 'upload_voice'})
 
     dp.message.register(form.get_form, Command(commands='form'))
     dp.message.register(form.get_name, StepsForm.GET_NAME)

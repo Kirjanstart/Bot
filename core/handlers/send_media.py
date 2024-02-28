@@ -33,18 +33,18 @@ async def get_sticker(message: Message, bot: Bot):
 
 
 async def get_video(message: Message, bot: Bot):
-    async with ChatActionSender.upload_video(chat_id=message.chat.id, bot=bot):
+    # async with ChatActionSender.upload_video(chat_id=message.chat.id, bot=bot):
         video = FSInputFile(path=r'C:\Users\k.lavkin\Desktop\6.MP4')
         await  bot.send_video(message.chat.id, video=video, caption='Это видео')
 
 
 async def get_video_note(message: Message, bot: Bot):
-    async with ChatActionSender.upload_video_note(chat_id=message.chat.id, bot=bot):
+    # async with ChatActionSender.upload_video_note(chat_id=message.chat.id, bot=bot):
         video_note = FSInputFile(path=r'C:\Users\k.lavkin\Desktop\6.MP4')
         await  bot.send_video_note(message.chat.id, video_note=video_note)
 
 
 async def get_voice(message: Message, bot: Bot):
-    async with ChatActionSender.record_voice(chat_id=message.chat.id, bot=bot):
+    # async with ChatActionSender.record_voice(chat_id=message.chat.id, bot=bot):
         voice = FSInputFile(path=r'C:\Users\k.lavkin\Desktop\Trava_u_doma.opus')
         await  bot.send_voice(message.chat.id, voice=voice, caption='Это голосовуха')
