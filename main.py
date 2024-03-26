@@ -25,9 +25,6 @@ from core.handlers import send_media
 from core.middlewares.example_chat_action_middleware import ExampleChatActionMiddleware
 
 
-
-
-
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
 dp = Dispatcher()
@@ -49,12 +46,14 @@ async  def crete_pool():
                                             host= '127.0.0.1', port=5432, command_timeout=60)
 
 
-async def main():
+async def begin():
     # dp.startup.register(start_bot)
     # dp.shutdown.register(stop_bot)
     # pool_connect = await crete_pool()
     # pool_connect = await asyncpg.create_pool(user='postgres', password='3846', database='users',
     #                                         host= '127.0.0.1', port=5432, command_timeout=60)
+
+
     # scheduler = AsyncIOScheduler(timezone='Europe/Moscow')
     # scheduler.add_job(apsched.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10),
     #                   kwargs={'bot': bot})
@@ -63,12 +62,14 @@ async def main():
     # scheduler.add_job(apsched.send_message_interval, trigger='interval', seconds=60, kwargs={'bot': bot})
     # scheduler.start()
 
+
     # dp.update.middleware.register(DbSession(pool_connect))
     # dp.message.middleware.register(CounterMiddleware())
     # dp.message.middleware.register(OfficeHoursMiddleware())
     # dp.update.middleware.register(OfficeHoursMiddleware())
     # dp.update.middleware.register(SchedulerMiddleware(scheduler))
     dp.message.middleware.register(ExampleChatActionMiddleware(bot))
+
 
     dp.message.register(send_media.get_audio, Command(commands='audio'), flags={'chat_action': 'upload_document'})
     dp.message.register(send_media.get_document, Command(commands='document'), flags={'chat_action': 'upload_document'})
@@ -79,10 +80,12 @@ async def main():
     dp.message.register(send_media.get_video_note, Command(commands='video_note'), flags={'chat_action': 'upload_video_note'})
     dp.message.register(send_media.get_voice, Command(commands='voice'), flags={'chat_action': 'upload_voice'})
 
+
     dp.message.register(form.get_form, Command(commands='form'))
     dp.message.register(form.get_name, StepsForm.GET_NAME)
     dp.message.register(form.get_last_name, StepsForm.GET_LAST_NAME)
     dp.message.register(form.get_age, StepsForm.GET_AGE)
+
 
     dp.message.register(order, Command(commands='pay'))
     dp.pre_checkout_query.register(pre_checkout_query)
@@ -105,4 +108,4 @@ async def main():
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    asyncio.run(begin())
